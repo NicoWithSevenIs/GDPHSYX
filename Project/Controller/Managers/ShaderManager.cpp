@@ -2,12 +2,12 @@
 
 using namespace managers;
 
-void ShaderManager::LoadShader(std::string key, std::string path, unsigned int shader_type) {
+void ShaderManager::LoadShader(std::string name, std::string path, unsigned int shader_type) {
 
     std::fstream shaderSrc(path);
 
     if (!shaderSrc.is_open()) {
-        std::cout << "Failed to open " << path;
+        std::cout << "Failed to Load Shader: " << path;
         return;
     }
 
@@ -22,11 +22,10 @@ void ShaderManager::LoadShader(std::string key, std::string path, unsigned int s
     glShaderSource(shader, 1, &s, NULL);
     glCompileShader(shader);
 
-    if (!this->shaders[key])
-        this->shaders[key] = new GLuint(glCreateProgram());
-
-    glAttachShader(*this->shaders[key], shader);
-
+    if (!this->shaders[name]) 
+        this->shaders[name] = new GLuint(glCreateProgram());
+    
+    glAttachShader(*this->shaders[name], shader);
 }
 
 GLuint* ShaderManager::getShader(std::string key) {

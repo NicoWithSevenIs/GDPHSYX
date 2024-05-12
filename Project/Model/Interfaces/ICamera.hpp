@@ -1,8 +1,10 @@
 #pragma once
 
-class ICamera {
+namespace interfaces {
 
-	public:
-		virtual void Render() = 0;
+	class ICamera {
+		public:
+			virtual void Render() = 0;
+	};
 
-};
+}

@@ -4,14 +4,17 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include "../Model/Interfaces/ICamera.hpp"
+
 #include <iostream>
 #include <chrono>
 
+using namespace interfaces;
 class Workspace {
 
 		private:
 			GLFWwindow* window;
-
+			ICamera* currentCamera;
 
 		private:
 			void Draw();
