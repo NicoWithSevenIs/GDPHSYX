@@ -134,12 +134,14 @@ int main(void)
     float znear = 1;
     float zfar = 10;
 
-    Vector3 a = Vector3(1.f, 2.5f, 3.f);
+    Vector3 a = Vector3(3.f, 1.5f, 3.f);
     Vector3 b = Vector3(3.f, 2.5f, 1.f);
 
-    a *= 3;
+   
 
-    std::cout << "vec: " << a << std::endl;
+    a.Normalize();
+
+    std::cout << "vec: " << a.Magnitude() << std::endl;
 
 
     while (!glfwWindowShouldClose(window))
@@ -159,7 +161,7 @@ int main(void)
 
 
         glm::mat4 transformation_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-        transformation_matrix = glm::scale(transformation_matrix, glm::vec3(1, 1, 1));
+        transformation_matrix = glm::scale(transformation_matrix, (glm::vec3)a);
         transformation_matrix = glm::rotate(transformation_matrix, glm::radians(0.f), glm::normalize(glm::vec3(0, 1, 0)));
 
 
