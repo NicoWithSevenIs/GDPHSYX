@@ -139,23 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Project\Controller\Managers\ShaderManager.hpp" />
-    <ClInclude Include="Project\Controller\Workspace.hpp" />
-    <ClInclude Include="config.hpp" />
-    <ClInclude Include="Project\Model\Camera\OrtographicCamera.hpp" />
-    <ClInclude Include="Project\Model\Interfaces\ICamera.hpp" />
+    <ClInclude Include="Project\Vector3.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="Project\Model\Shaders\Temp.frag" />
+    <None Include="Project\Model\Shaders\Temp.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Project\Controller\Managers\ShaderManager.cpp" />
-    <ClCompile Include="Project\Controller\Workspace.cpp" />
-    <ClCompile Include="Project\Model\Camera\OrtographicCamera.cpp" />
+    <ClCompile Include="Project\Vector3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
