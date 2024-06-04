@@ -15,9 +15,16 @@
 #include <iostream>
 #include <string>
 
-//ermm submitting this instead, I'm still optimizing the oop for the actual one im gonna use (it's based on the GRAP1 MP)
+//ermm ill work on the model class another day
 
 #include "Project/Vector3.hpp"
+#include "Project/Managers/ShaderManager.hpp"
+#include "Project/Components/ShaderNames.hpp"
+#include "Project/Managers/CameraManager.hpp"
+
+#include "config.hpp"
+using namespace managers;
+
 
 int main(void)
 {
@@ -29,7 +36,7 @@ int main(void)
     float window_width = 500.f;
     float window_height = 500.f;
 
-    window = glfwCreateWindow(window_width, window_height, "Nico Tolentino", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Nico Tolentino", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -39,40 +46,9 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    #pragma region shader
+    ShaderManager::getInstance()->buildShaders();
 
-        glViewport(0, 0, window_width, window_height);
-
-        std::fstream vertSrc("Shaders/shaders.vert");
-
-        std::stringstream vertBuff;
-        vertBuff << vertSrc.rdbuf();
-
-        std::string vertS = vertBuff.str();
-        const char* v = vertS.c_str();
-
-        std::fstream fragSrc("Shaders/shaders.frag");
-        std::stringstream fragBuff;
-        fragBuff << fragSrc.rdbuf();
-
-        std::string fragS = fragBuff.str();
-        const char* f = fragS.c_str();
-
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &v, NULL);
-        glCompileShader(vertexShader);
-
-        GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragShader, 1, &f, NULL);
-        glCompileShader(fragShader);
-
-        GLuint shaderProg = glCreateProgram();
-        glAttachShader(shaderProg, vertexShader);
-        glAttachShader(shaderProg, fragShader);
-
-        glLinkProgram(shaderProg);
-
-    #pragma endregion
+    //glViewport(0, 0, window_width, window_height);
 
     #pragma region model
         std::string path = "3D/sphere.obj";
@@ -125,51 +101,30 @@ int main(void)
 
     #pragma endregion
 
-
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-    float size = 3.f;
-    float znear = 1;
-    float zfar = 10;
-
-    Vector3 a = Vector3(3.f, 1.5f, 3.f);
-    Vector3 b = Vector3(3.f, 2.5f, 1.f);
-
-   
-
-    a.Normalize();
-
-    std::cout << "vec: " << a.Magnitude() << std::endl;
-
+    Shader* shader = (*ShaderManager::getInstance())[ShaderNames::MODEL_SHADER];
+    CameraManager::getCamera()->assignShader(shader);
+    OrthographicCamera* ortho = (OrthographicCamera*) CameraManager::getCamera();
+    ortho->setOrthoData(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
 
     while (!glfwWindowShouldClose(window))
     {
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-
-        glm::mat4 projectionMatrix = glm::ortho(-size, size, -size, size, znear, zfar);
-
-        unsigned int projectionLoc = glGetUniformLocation(shaderProg, "projection");
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-        unsigned int viewLoc = glGetUniformLocation(shaderProg, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
+        CameraManager::getCamera()->Draw();
 
         glm::mat4 transformation_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-        transformation_matrix = glm::scale(transformation_matrix, (glm::vec3)a);
-        transformation_matrix = glm::rotate(transformation_matrix, glm::radians(0.f), glm::normalize(glm::vec3(0, 1, 0)));
+        
+        transformation_matrix = glm::scale(transformation_matrix, glm::vec3(50, 50, 50));
+       
 
 
-        unsigned int transformLoc = glGetUniformLocation(shaderProg, "transform");
+        unsigned int transformLoc = glGetUniformLocation(shader->getShaderProg(), "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
 
 
-        glUseProgram(shaderProg);
+        glUseProgram(shader->getShaderProg());
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, mesh_indices.size(), GL_UNSIGNED_INT, 0);
 

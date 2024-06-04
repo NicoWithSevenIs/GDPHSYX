@@ -139,6 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="config.hpp" />
+    <ClInclude Include="Project\Camera\Camera.hpp" />
+    <ClInclude Include="Project\Camera\OrthographicCamera.hpp" />
+    <ClInclude Include="Project\Components\Shader.hpp" />
+    <ClInclude Include="Project\Components\ShaderNames.hpp" />
+    <ClInclude Include="Project\Managers\CameraManager.hpp" />
+    <ClInclude Include="Project\Managers\ShaderManager.hpp" />
+    <ClInclude Include="Project\Model.h" />
     <ClInclude Include="Project\Vector3.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="tiny_obj_loader.h" />
@@ -151,6 +159,13 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Project\Camera\Camera.cpp" />
+    <ClCompile Include="Project\Camera\OrthographicCamera.cpp" />
+    <ClCompile Include="Project\Components\Shader.cpp" />
+    <ClCompile Include="Project\Components\ShaderNames.cpp" />
+    <ClCompile Include="Project\Managers\CameraManager.cpp" />
+    <ClCompile Include="Project\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Project\Model.cpp" />
     <ClCompile Include="Project\Vector3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

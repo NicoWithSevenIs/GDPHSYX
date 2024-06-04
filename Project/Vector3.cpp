@@ -1,5 +1,8 @@
 #include "Vector3.hpp"
 
+const Vector3 Vector3::zero = Vector3();
+const Vector3 Vector3::one = Vector3(1,1,1);
+const Vector3 Vector3::up = Vector3(0,1,0);
 
 float Vector3::Magnitude() const {
 	return sqrt(x*x + y*y + z*z);
@@ -31,4 +34,4 @@ std::ostream& operator << (std::ostream& os, const Vector3& v)
 {
 	os << "{" << v.x << "," << v.y << "," << v.z << "}";
 	return os;
-}
+} 

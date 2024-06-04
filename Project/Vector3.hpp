@@ -7,10 +7,18 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+
+
 class Vector3 {
 
+	
 	public:
 		float x,y,z;
+
+		static const Vector3 zero;
+		static const Vector3 one;
+		static const Vector3 up;
+
 
 	public:
 		Vector3(): x(0), y(0), z(0){}
