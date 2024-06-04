@@ -10,9 +10,36 @@
 
 */
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "Components/ObjData.hpp"
+#include "Components/Transform.hpp"
+#include "Components/Shader.hpp"
 
 class Model{
 
-	
+	public:
+		Transform transform;
+
+	private:
+		ObjData objData;
+		Shader* shader = nullptr;
+
+	private:
+		GLuint VBO, VAO, EBO;
+
+	public:
+		Model(std::string filename);
+		//Model(const Model& other);
+		~Model();
+
+	public:
+		void Draw();
+		void assignShader(Shader* shader);
+
+	private:
+		void initializeBuffers();
 
 };

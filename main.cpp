@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 //ermm ill work on the model class another day
 
@@ -21,9 +22,15 @@
 #include "Project/Managers/ShaderManager.hpp"
 #include "Project/Components/ShaderNames.hpp"
 #include "Project/Managers/CameraManager.hpp"
+#include "Project/Particle.hpp"
+
 
 #include "config.hpp"
+
+
 using namespace managers;
+using namespace std::chrono_literals;
+
 
 
 int main(void)
@@ -106,15 +113,46 @@ int main(void)
     OrthographicCamera* ortho = (OrthographicCamera*) CameraManager::getCamera();
     ortho->setOrthoData(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
 
+    Particle p = Particle();
+    p.setPosition(Vector3(300,300,0));
+    p.setVelocity(Vector3(0,10,0));
+    p.setAcceleration(Vector3(0,-29.81f, 0));
+
+
+    constexpr std::chrono::nanoseconds timestep(16ms);
+    using clock = std::chrono::high_resolution_clock;
+
+    auto curr_time = clock::now();
+    auto prev_time = curr_time;
+
+    std::chrono::nanoseconds curr_ns(0);
+
+
     while (!glfwWindowShouldClose(window))
     {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        CameraManager::getCamera()->Draw();
+        curr_time = clock::now();
+        auto dur = std::chrono::duration_cast<std::chrono::nanoseconds> (curr_time - prev_time);
+        prev_time = curr_time;
+        curr_ns += dur;
 
-        glm::mat4 transformation_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+
+        if (curr_ns >= timestep) {
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(curr_ns);
+            curr_ns -= curr_ns;
+
+            //std::cout << "FixedUpdate" << std::endl;
+            p.Update((float)ms.count() / 1000);
+        }
+        //std::cout << "Update" << std::endl;
+
+        CameraManager::getCamera()->Draw();
+            
+
+        glm::mat4 transformation_matrix = glm::translate(glm::mat4(1.0f), (glm::vec3) p.getPosition() );
         
         transformation_matrix = glm::scale(transformation_matrix, glm::vec3(50, 50, 50));
        

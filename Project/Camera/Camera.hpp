@@ -21,5 +21,7 @@ class Camera {
 		virtual void Draw() = 0;
 		void assignShader(Shader* shader);
 		
+		void getPosition();
+		void setPosition();
 
 };
