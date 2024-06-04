@@ -20,6 +20,7 @@ void Particle::setPosition(Vector3 position) {
 
 void Particle::setVelocity(Vector3 velocity) {
 	this->velocity = velocity;
+	this->initialVelocity = velocity;
 }
 
 void Particle::setAcceleration(Vector3 acceleration) {
@@ -28,6 +29,14 @@ void Particle::setAcceleration(Vector3 acceleration) {
 
 Vector3 Particle::getPosition() {
 	return this->position;
+}
+
+Vector3 Particle::getVelocity() {
+	return this->velocity;
+}
+
+Vector3 Particle::getInitialVelocity() {
+	return this->initialVelocity;
 }
 
 void Particle::Destroy() {

@@ -4,6 +4,14 @@ const Vector3 Vector3::zero = Vector3();
 const Vector3 Vector3::one = Vector3(1,1,1);
 const Vector3 Vector3::up = Vector3(0,1,0);
 
+float Vector3::EuclideanDistance(const Vector3 other) const {
+	float x = other.x - this->x;
+	float y = other.y - this->y;
+	float z = other.z - this->z;
+
+	return sqrt(x*x + y*y + z*z);
+}
+
 float Vector3::Magnitude() const {
 	return sqrt(x*x + y*y + z*z);
 }

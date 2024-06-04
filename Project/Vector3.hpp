@@ -60,12 +60,19 @@ class Vector3 {
 			this->z *= scalar;
 		}
 
+		//equality
+		inline bool operator ==(const Vector3& other) const {
+			return this->x == other.x && this->y == other.y && this->z == other.z;
+		}
+
+
 		float Magnitude() const;
 
 		//direction
 		Vector3 Direction() const;
 		void Normalize();
 
+		float EuclideanDistance(const Vector3 other) const;
 
 		float dot(Vector3 other) const;
 		Vector3 cross(Vector3 other) const;
@@ -81,7 +88,11 @@ class Vector3 {
 			this->z *= other.z;
 		}
 
+	
+
 		//printing
 		friend std::ostream& operator << (std::ostream& os, const Vector3& v);
+
+
 
 };

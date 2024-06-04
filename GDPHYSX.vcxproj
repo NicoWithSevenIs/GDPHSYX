@@ -150,6 +150,7 @@
     <ClInclude Include="Project\Managers\ShaderManager.hpp" />
     <ClInclude Include="Project\Model.h" />
     <ClInclude Include="Project\Particle.hpp" />
+    <ClInclude Include="Project\RenderParticle.hpp" />
     <ClInclude Include="Project\Vector3.hpp" />
     <ClInclude Include="Project\World.hpp" />
     <ClInclude Include="stb_image.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Project\Components\Transform.cpp" />
     <ClCompile Include="Project\Managers\CameraManager.cpp" />
     <ClCompile Include="Project\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Project\RenderParticle.cpp" />
     <ClCompile Include="Project\World.cpp" />
     <ClCompile Include="Project\Model.cpp" />
     <ClCompile Include="Project\Particle.cpp" />

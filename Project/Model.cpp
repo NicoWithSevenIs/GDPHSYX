@@ -22,11 +22,17 @@ void Model::assignShader(Shader* shader) {
 	this->shader = shader;
 }
 
+void Model::setColor(Vector3 color) {
+	this->color = color;
+}
+
 void Model::Draw() {
 
-	if(this->shader == nullptr)
+	if (this->shader == nullptr) {
+		std::cout << "[ERROR] No Shaders Attached" << std::endl;
 		return;
-
+	}
+		
 	glBindVertexArray(this->VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
@@ -36,6 +42,7 @@ void Model::Draw() {
 		this->objData.getAttributes().vertices.data(),
 		GL_STATIC_DRAW
 	);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -57,6 +64,8 @@ void Model::Draw() {
 	unsigned int transformLoc = glGetUniformLocation(shader->getShaderProg(), "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
 
+	unsigned int colorLoc = glGetUniformLocation(shader->getShaderProg(), "color");
+	glUniform3fv(colorLoc, 1, glm::value_ptr((glm::vec3)this->color));
 
 	glUseProgram(shader->getShaderProg());
 	glBindVertexArray(VAO);

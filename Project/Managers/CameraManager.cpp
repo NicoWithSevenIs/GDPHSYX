@@ -16,7 +16,7 @@ CameraManager* CameraManager::getInstance() {
 }
 
 CameraManager::CameraManager() {
-	this->ortho = OrthographicCamera(Vector3(-350,-350,100), Vector3(0,0,-1));
+	this->ortho = OrthographicCamera(Vector3(-350,-350,200), Vector3(0,0,-1));
 	this->currentCamera = &this->ortho;
 }
 

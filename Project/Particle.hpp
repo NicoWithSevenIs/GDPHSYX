@@ -12,6 +12,8 @@ class Particle {
 		Vector3 velocity;
 		Vector3 acceleration;
 
+		Vector3 initialVelocity;
+
 	protected:
 		void UpdatePosition(float deltaTime);
 		void UpdateVelocity(float deltaTime);
@@ -28,4 +30,6 @@ class Particle {
 
 	public:
 		Vector3 getPosition();
+		Vector3 getVelocity();
+		Vector3 getInitialVelocity();
 };

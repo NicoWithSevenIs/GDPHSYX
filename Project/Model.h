@@ -26,6 +26,8 @@ class Model{
 	private:
 		ObjData objData;
 		Shader* shader = nullptr;
+		Vector3 color = Vector3::one;
+
 
 	private:
 		GLuint VBO, VAO, EBO;
@@ -38,6 +40,7 @@ class Model{
 	public:
 		void Draw();
 		void assignShader(Shader* shader);
+		void setColor(Vector3 color);
 
 	private:
 		void initializeBuffers();
