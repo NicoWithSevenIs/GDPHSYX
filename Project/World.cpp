@@ -12,8 +12,8 @@ void World::Update(float deltaTime) {
 		p->timeTravelled += deltaTime;
 
 
-		std::cout << p->name << ": " << p->particle->getPosition().EuclideanDistance(Vector3::zero) <<std::endl;
-		if (p->particle->getPosition().EuclideanDistance(Vector3::zero) <= 3.f) {
+		std::cout << p->name << ": " << Vector3::Distance(p->particle->getPosition(), Vector3::zero) <<std::endl;
+		if (Vector3::Distance(p->particle->getPosition(), Vector3::zero) <= 3.f) {
 			this->rankings.push_back(p);
 			p->particle->Destroy();
 		}	
