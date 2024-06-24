@@ -140,6 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="config.hpp" />
+    <ClInclude Include="Project\Forces\DragForceGenerator.hpp" />
+    <ClInclude Include="Project\Forces\GravityForceGenerator.hpp" />
+    <ClInclude Include="Project\Forces\ForceRegistry.hpp" />
+    <ClInclude Include="Project\Forces\ForceGenerator.hpp" />
     <ClInclude Include="Project\Camera\Camera.hpp" />
     <ClInclude Include="Project\Camera\OrthographicCamera.hpp" />
     <ClInclude Include="Project\Components\ObjData.hpp" />
@@ -162,6 +166,10 @@
     <None Include="Project\Model\Shaders\Temp.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Project\Forces\DragForceGenerator.cpp" />
+    <ClCompile Include="Project\Forces\GravityForceGenerator.cpp" />
+    <ClCompile Include="Project\Forces\ForceRegistry.cpp" />
+    <ClCompile Include="Project\Forces\ForceGenerator.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\Camera\Camera.cpp" />

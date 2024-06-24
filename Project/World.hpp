@@ -1,6 +1,9 @@
 #pragma once
 
 #include "RenderParticle.hpp"
+#include "Forces/ForceRegistry.hpp"
+#include "Forces/GravityForceGenerator.hpp"
+
 #include <list>
 #include <functional>
 #include <iomanip>
@@ -8,6 +11,10 @@
 class World {
 	
 	public:
+		ForceRegistry forceRegistry;
+		GravityForceGenerator gravity;
+
+	private:
 		std::list<RenderParticle*> particleList;
 		std::vector<RenderParticle*> rankings;
 

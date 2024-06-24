@@ -3,8 +3,18 @@
 #include "Vector3.hpp"
 class Particle {
 	
-	private:
-		float mass = 0;
+	public:
+		float mass = 5;
+
+	protected:
+		Vector3 accumulatedForce = Vector3::zero;
+		
+
+		// 0 -> 1
+		// 0 nothing left
+		// 1 constant v
+
+		float damping = 0.5f;
 		bool isDestroyed = false;
 
 	private:
@@ -18,10 +28,15 @@ class Particle {
 		void UpdatePosition(float deltaTime);
 		void UpdateVelocity(float deltaTime);
 
+
+
 	public:
 		void Update(float deltaTime);
 		void Destroy();
 		bool IsDestroyed();
+
+		void AddForce(Vector3 force);
+		void ResetForce();
 
 	public: 
 		void setPosition(Vector3 position);

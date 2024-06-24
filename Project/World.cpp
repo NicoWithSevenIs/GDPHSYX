@@ -3,6 +3,8 @@
 
 void World::Update(float deltaTime) {
 	//this->UpdateParticleList();
+	forceRegistry.UpdateForces(deltaTime);
+
 	for (auto p : particleList) {
 
 		if(p->particle->IsDestroyed())
@@ -30,6 +32,8 @@ void World::Draw() {
 
 void World::AddParticle(RenderParticle* p) {
 	this->particleList.push_back(p);
+
+	forceRegistry.Add(p->particle, &gravity);
 }
 
 void World::UpdateParticleList() {

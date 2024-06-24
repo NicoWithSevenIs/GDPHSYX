@@ -42,7 +42,7 @@ void Shaboomboom(Particle* p, float velocity, float acceleration) {
     dir *= -1;
 
     p->setVelocity(dir * velocity);
-    p->setAcceleration(dir * acceleration);
+    //p->setAcceleration(dir * acceleration);
 }
 
 int main(void)
@@ -87,8 +87,12 @@ int main(void)
     p->setPosition(Vector3(300,300,173));
 
     //oh lord i feel like wet spaghetti rn so i guess ill be doing this instead
-    Shaboomboom(p, 90, 8);
+    //Shaboomboom(p, 90, 8);
    
+    p->mass = 3;
+    p->AddForce(Vector3(-6000,0,0));
+
+
     /* RED (NW) */
     Model* m2 = new Model(*m);
     m2->setColor(Vector3(1, 0, 0));

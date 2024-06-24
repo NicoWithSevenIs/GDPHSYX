@@ -2,16 +2,20 @@
 #include "Particle.hpp"
 
 void Particle::UpdatePosition(float deltaTime) {
-	this->position += (velocity * deltaTime) + ( (this->acceleration * deltaTime * deltaTime) * 0.5f );
+	this->position += (velocity * deltaTime) + (this->acceleration * deltaTime * deltaTime) / 2.f;
 }
 
 void Particle::UpdateVelocity(float deltaTime) {
+	this->acceleration += accumulatedForce / mass;
 	this->velocity += this->acceleration * deltaTime;
+	this->velocity *= powf(damping, deltaTime);
 }
 
 void Particle::Update(float deltaTime) {
 	this->UpdatePosition(deltaTime);
 	this->UpdateVelocity(deltaTime);
+
+	this->ResetForce();
 }
 
 void Particle::setPosition(Vector3 position) {
@@ -45,4 +49,13 @@ void Particle::Destroy() {
 
 bool Particle::IsDestroyed() {
 	return this->isDestroyed;
+}
+
+void Particle::AddForce(Vector3 force) {
+	this->accumulatedForce += force;
+}
+
+void Particle::ResetForce() {
+	this->accumulatedForce = Vector3::zero;
+	this->acceleration = Vector3::zero;
 }
