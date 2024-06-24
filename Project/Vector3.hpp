@@ -31,6 +31,7 @@ class Vector3 {
 	public:
 		Vector3(): x(0), y(0), z(0){}
 		Vector3(const float x, const  float y, const float z): x(x), y(y), z(z){}
+		Vector3(const glm::vec3& vec): x(vec.x), y(vec.y), z(vec.z){}
 
 
 	public:
@@ -55,11 +56,11 @@ class Vector3 {
 			return glm::vec3(x,y,z);
 		}
 
-		inline Vector3 operator + (const Vector3 other) const {
+		inline Vector3 operator + (const Vector3& other) const {
 			return Vector3(this->x + other.x, this->y + other.y, this->z + other.z);
 		}
 
-		inline Vector3 operator - (const Vector3 other) const {
+		inline Vector3 operator - (const Vector3& other) const {
 			return Vector3(this->x - other.x, this->y - other.y, this->z - other.z);
 		}
 
@@ -76,9 +77,14 @@ class Vector3 {
 		}
 
 		//Scalar Multiplication
-		inline Vector3 operator * (const float scalar) const {
-			return Vector3(this->x * scalar, this->y * scalar, this->z * scalar);
+		inline friend Vector3 operator * (const float scalar, const Vector3& v)  {
+			return Vector3(v.x * scalar, v.y * scalar, v.z * scalar);
 		}
+
+		inline friend Vector3 operator * (const Vector3& v, const float scalar) {
+			return scalar * v;
+		}
+
 
 		inline void operator *= (const float scalar) {
 			this->x *= scalar;

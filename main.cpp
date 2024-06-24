@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <GLFW/glfw3.h>
+#include <typeinfo>
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 //#include "tiny_obj_loader.h"
@@ -20,10 +21,14 @@
 #include "Project/Managers/ShaderManager.hpp"
 #include "Project/Components/ShaderNames.hpp"
 #include "Project/Managers/CameraManager.hpp"
+#include "Project/Managers/Input.hpp"
 #include "Project/Particle.hpp"
 #include "Project/Model.h"
 
+
+
 #include "Project/World.hpp"
+#include "Project/Controllers/RenderParticleController/RenderParticleController.hpp"
 
 #include "config.hpp"
 
@@ -31,31 +36,17 @@
 using namespace managers;
 using namespace std::chrono_literals;
 
-//will fix encapsulation issues on another day haha
-
-/*
-    Fires the sphere towards the origin
-*/
-void Shaboomboom(Particle* p, float velocity, float acceleration) {
-    Vector3 dir = p->getPosition();
-    dir.Normalize();
-    dir *= -1;
-
-    p->setVelocity(dir * velocity);
-    //p->setAcceleration(dir * acceleration);
-}
-
 int main(void)
-{
+{   
+    int sizeInput = Input::returnIntInput();
+
     GLFWwindow* window;
+    srand(time(0));
 
     if (!glfwInit())
         return -1;
 
-    float window_width = 500.f;
-    float window_height = 500.f;
-
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PC01 John Enrico Tolentino", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Group5_Tolentino&Ong_Engine1_Phase1", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -65,63 +56,20 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
+    glfwSetKeyCallback(window, Input::keyCallback);
+    glfwSetCursorPosCallback(window, Input::mouseCallback);
+
     ShaderManager::getInstance()->buildShaders();
 
-    //glViewport(0, 0, window_width, window_height);
+    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     Shader* shader = (*ShaderManager::getInstance())[ShaderNames::MODEL_SHADER];
-    CameraManager::getCamera()->assignShader(shader);
-    OrthographicCamera* ortho = (OrthographicCamera*) CameraManager::getCamera();
-    ortho->setOrthoData(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
+    CameraManager::initializeCameras(shader);
+
+    // RenderParticleController is the class that handles the spawning of the particles //
+    RenderParticleController renderparticleController = RenderParticleController(sizeInput);
 
     World world = World();
-
-
-    /* GREEN (NE) */
-    Model* m = new Model("3D/sphere.obj");
-    m->transform.scale = Vector3(10, 10, 10);
-    m->assignShader(shader);
-    m->setColor(Vector3(0, 1, 0));
-
-    Particle* p = new Particle();
-    p->setPosition(Vector3(300,300,173));
-
-    //oh lord i feel like wet spaghetti rn so i guess ill be doing this instead
-    //Shaboomboom(p, 90, 8);
-   
-    p->mass = 3;
-    p->AddForce(Vector3(-6000,0,0));
-
-
-    /* RED (NW) */
-    Model* m2 = new Model(*m);
-    m2->setColor(Vector3(1, 0, 0));
-
-    Particle* p2 = new Particle();
-    p2->setPosition(Vector3(-300, 300, 201));
-    Shaboomboom(p2, 80, 14.5f);
-
-    /* BLUE (SE) */
-    Model* m3 = new Model(*m);
-    m3->setColor(Vector3(0, 0, 1));
-
-    Particle* p3 = new Particle();
-    p3->setPosition(Vector3(300, -300, -300));
-    Shaboomboom(p3, 130, 1);
-
-
-    /* YELLOW (SW) */
-    Model* m4 = new Model(*m);
-    m4->setColor(Vector3(1, 1, 0));
-
-    Particle* p4 = new Particle();
-    p4->setPosition(Vector3(-300, -300, -150));
-    Shaboomboom(p4, 110, 3);
-
-    world.AddParticle(new RenderParticle("Green", m, p));
-    world.AddParticle(new RenderParticle("Red", m2, p2));
-    world.AddParticle(new RenderParticle("Blue", m3, p3));
-    world.AddParticle(new RenderParticle("Yellow", m4, p4));
 
     //might try to make a time singleton to handle this
 
@@ -133,12 +81,33 @@ int main(void)
 
     std::chrono::nanoseconds curr_ns(0);
 
+    bool isPaused = false;
+
+    Input& input = *Input::getInstance();
+
+    input[GLFW_KEY_SPACE] += { GLFW_PRESS, [&isPaused]() {isPaused = !isPaused;} };
+    input[GLFW_KEY_1] += { GLFW_PRESS, []() { CameraManager::switchToOrtho(); }};
+    input[GLFW_KEY_2] += { GLFW_PRESS, []() { CameraManager::switchToPerspective(); }};
+
+
+    float x = 0;
+    float y = 0;
+    float step = 0.1f;
+
+    input[GLFW_KEY_W] += { GLFW_REPEAT, [&x, step]() { x += step; }};
+    input[GLFW_KEY_S] += { GLFW_REPEAT, [&x, step]() { x -= step; }};
+
+    input[GLFW_KEY_D] += { GLFW_REPEAT, [&y, step]() { y += step; }};
+    input[GLFW_KEY_A] += { GLFW_REPEAT, [&y, step]() { y -= step; }};
+    input[GLFW_KEY_BACKSPACE] += {GLFW_PRESS, [&x, &y] {x = 0; y=0;}};
+ 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     while (!glfwWindowShouldClose(window))
     {
-
+ 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        
         curr_time = clock::now();
         auto dur = std::chrono::duration_cast<std::chrono::nanoseconds> (curr_time - prev_time);
         prev_time = curr_time;
@@ -149,24 +118,29 @@ int main(void)
             curr_ns -= curr_ns;
 
             float dT = (float)ms.count() / 1000;
-            world.Update(dT);
-        }
 
-        CameraManager::getCamera()->Draw();
+            if (!isPaused){
+                world.Update(dT);
+            }
+                
+            
+        } 
+
+        if (!isPaused && renderparticleController.triggerSpawn)
+            world.AddParticle(renderparticleController.createRenderParticle());
+
+        renderparticleController.tickDown(&world, 0.01f);
+        CameraManager::DoOnAllCameras([x,y](Camera* camera) { camera->setRotation(Vector3(x, y, 0)); } );
+        CameraManager::getMain()->Draw();
         world.Draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        if(world.allInCenter())
-            break;
     }
 
-    world.printResults();
     glfwTerminate();
 
-    std::cout << "Press [ENTER] to continue..." << std::endl;
-    getchar();
 
     return 0;
 }
