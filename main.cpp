@@ -26,6 +26,7 @@
 #include "Project/Model.h"
 
 #include "Project/World.hpp"
+#include "Project/ParticleContact.hpp"
 
 #include "config.hpp"
 
@@ -62,18 +63,49 @@ int main(void)
     Shader* shader = (*ShaderManager::getInstance())[ShaderNames::MODEL_SHADER];
     CameraManager::initializeCameras(shader);
 
+
+
     World world = World();
+
     Model* m = new Model("3D/sphere.obj");
+    m->assignShader(shader);
+    m->transform.scale = Vector3::one * 50.f;
+
     Particle *p = new Particle();
+    p->lifeSpan = 100;
+    p->position = Vector3::right * 50.f;
 
     m->setColor(Vector3(255,255,255));
 
     RenderParticle p1 = RenderParticle("p1", m, p);
-    p1.particle->position = Vector3::zero;
     p1.particle->mass = 5;
+
     world.AddParticle(&p1);
 
 
+
+    Model* m2 = new Model(*m);
+    m2->setColor(Vector3(255, 255, 0));
+
+    Particle* pp = new Particle(*p);
+    pp->position = Vector3::right * 150;
+
+    RenderParticle p2 = RenderParticle("p2", m2, pp);
+    p2.particle->mass = 5;
+
+    world.AddParticle(&p2);
+
+    ParticleContact contact = ParticleContact();
+    contact.particles[0] = p;
+    contact.particles[1] = pp;
+
+    contact.contactNormal = p->position - pp->position;
+    contact.contactNormal.Normalize();
+
+    contact.restitution = 1;
+
+    p->velocity = Vector3(15, 15, 0);
+    pp->velocity = Vector3(-30,5,0);
 
 
     //might try to make a time singleton to handle this
@@ -127,6 +159,7 @@ int main(void)
 
             if (!isPaused){
                 world.Update(dT);
+                contact.resolve(dT);
             }
                 
             
