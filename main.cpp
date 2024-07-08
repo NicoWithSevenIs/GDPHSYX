@@ -25,10 +25,7 @@
 #include "Project/Particle.hpp"
 #include "Project/Model.h"
 
-
-
 #include "Project/World.hpp"
-#include "Project/Controllers/RenderParticleController/RenderParticleController.hpp"
 
 #include "config.hpp"
 
@@ -38,7 +35,6 @@ using namespace std::chrono_literals;
 
 int main(void)
 {   
-    int sizeInput = Input::returnIntInput();
 
     GLFWwindow* window;
     srand(time(0));
@@ -46,7 +42,7 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Group5_Tolentino&Ong_Engine1_Phase1", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Nico", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -66,10 +62,19 @@ int main(void)
     Shader* shader = (*ShaderManager::getInstance())[ShaderNames::MODEL_SHADER];
     CameraManager::initializeCameras(shader);
 
-    // RenderParticleController is the class that handles the spawning of the particles //
-    RenderParticleController renderparticleController = RenderParticleController(sizeInput);
-
     World world = World();
+    Model* m = new Model("3D/sphere.obj");
+    Particle *p = new Particle();
+
+    m->setColor(Vector3(255,255,255));
+
+    RenderParticle p1 = RenderParticle("p1", m, p);
+    p1.particle->position = Vector3::zero;
+    p1.particle->mass = 5;
+    world.AddParticle(&p1);
+
+
+
 
     //might try to make a time singleton to handle this
 
@@ -83,6 +88,7 @@ int main(void)
 
     bool isPaused = false;
 
+  
     Input& input = *Input::getInstance();
 
     input[GLFW_KEY_SPACE] += { GLFW_PRESS, [&isPaused]() {isPaused = !isPaused;} };
@@ -100,7 +106,7 @@ int main(void)
     input[GLFW_KEY_D] += { GLFW_REPEAT, [&y, step]() { y += step; }};
     input[GLFW_KEY_A] += { GLFW_REPEAT, [&y, step]() { y -= step; }};
     input[GLFW_KEY_BACKSPACE] += {GLFW_PRESS, [&x, &y] {x = 0; y=0;}};
- 
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     while (!glfwWindowShouldClose(window))
@@ -125,11 +131,7 @@ int main(void)
                 
             
         } 
-
-        if (!isPaused && renderparticleController.triggerSpawn)
-            world.AddParticle(renderparticleController.createRenderParticle());
-
-        renderparticleController.tickDown(&world, 0.01f);
+       
         CameraManager::DoOnAllCameras([x,y](Camera* camera) { camera->setRotation(Vector3(x, y, 0)); } );
         CameraManager::getMain()->Draw();
         world.Draw();

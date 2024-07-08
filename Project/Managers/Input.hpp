@@ -50,7 +50,6 @@ class Input
 		
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void mouseCallback(GLFWwindow* window, double xPos, double yPos);
-		static int returnIntInput();
 		
 	#pragma region Singleton
 	private:
