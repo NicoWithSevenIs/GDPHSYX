@@ -6,7 +6,9 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "iostream"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 struct Key_Event {
 	int invoke_type;
@@ -63,7 +65,9 @@ class Input
 	public:
 		static Input* getInstance();
 
-		//static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+		template <typename T>
+		static T getLine(std::string message = "Input");
+
 	#pragma endregion
 
 };
