@@ -177,19 +177,13 @@ int main(void)
                 
             
         } 
-       
-        line.Update(p2->particle->position, anchorpoint2, CameraManager::getMain()->worldProjection);
-        line2.Update(p1->particle->position, anchorpoint1, CameraManager::getMain()->worldProjection);
-       
+      
 
 
         world.Draw();
 
         CameraManager::DoOnAllCameras([x, y](Camera* camera) { camera->setRotation(Vector3(x, y, 0)); });
         CameraManager::getMain()->Draw();
-
-        line.Draw();
-        line2.Draw();
 
 
         glfwSwapBuffers(window);
